@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Subway Strategy Unwrapped</title>
 <style>
-:root{--g:#008938;--y:#FFC20D;--k:#16201B;--mut:#5C6660;--hair:#DFE3DD;--tint:#F4F6F2;--red:#C8432B;--dk:#004D19;--bg:#fff;--fg:var(--k);--l3:var(--dk)}
+:root{--g:#008938;--y:#FFC20D;--k:#16201B;--mut:#5C6660;--hair:#DFE3DD;--tint:#ECE8DA;--red:#C8432B;--dk:#26592E;--bg:#F6F2E7;--fg:var(--k);--l3:var(--dk)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#0d0f0e;overflow:hidden;font-family:"Avenir Next","Helvetica Neue","Segoe UI",Arial,sans-serif;color:var(--k)}
 #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--s,1));background:#fff;overflow:hidden}
@@ -54,7 +54,7 @@ h2{font-size:50px;line-height:1.1;font-weight:800;letter-spacing:-.015em;max-wid
 
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#B9C0BA;margin-right:12px;flex:none;position:relative;top:-2px}
 .dot.s{background:var(--g)}
-.legend{position:absolute;right:0;bottom:-6px;font-size:16px;color:var(--mut);background:#fff;padding:4px 0 4px 14px}
+.legend{position:absolute;right:0;bottom:-6px;font-size:16px;color:var(--mut);background:var(--bg);padding:4px 0 4px 14px}
 .sowhat{background:var(--tint);padding:22px 28px;font-size:24px;line-height:1.35}
 .dark .sowhat small{color:var(--y)}
 .sowhat small{display:block;font-size:15px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g);margin-bottom:6px}
@@ -330,7 +330,7 @@ button:focus-visible{outline:3px solid var(--y);outline-offset:3px}
 .slide.active .ocol{animation:rise .9s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(.3s + var(--i,0)*140ms)}
 
 /* ---------- the build: seven layers stack into one sandwich ---------- */
-.slide.build{--bg:#024810;padding-top:110px}
+.slide.build{--bg:var(--dk);padding-top:110px}
 .build h2{font-size:64px;max-width:760px}
 .build .lead{font-size:26px;line-height:1.35;color:var(--mut);max-width:600px;margin-top:26px}
 .build .key{margin-top:34px;font-size:19px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:opacity .5s}
@@ -384,7 +384,7 @@ body.print .ly img{transform:none!important}body.print .lb,body.print .key{opaci
 .slide.active.brk h2{animation:rise 1s cubic-bezier(.16,1,.3,1) .45s both}.slide.active.brk p{animation:rise 1s cubic-bezier(.16,1,.3,1) .6s both}.slide.active.brk ul{animation:rise 1s cubic-bezier(.16,1,.3,1) .75s both}
 
 /* ---------- recommendation: the finished sandwich ---------- */
-.slide.rec{--bg:#024810}
+.slide.rec{--bg:var(--dk)}
 .rec h2{font-size:92px;line-height:.98;letter-spacing:-.03em;max-width:900px}
 .rec .lead{font-size:28px;line-height:1.35;color:var(--mut);max-width:800px;margin-top:26px}
 .rec ol{list-style:none;max-width:860px;margin-top:30px}
@@ -396,9 +396,10 @@ body.print .ly img{transform:none!important}body.print .lb,body.print .key{opaci
 .slide.active .full{animation:pop 1s cubic-bezier(.16,1,.3,1) .45s both}
 
 /* ---------- mission, vision, values: three full-height colour panels with food ---------- */
-.slide.mv{--bg:#008938;--mut:#fff;--d0:.3s;padding:0;display:grid;grid-template-columns:repeat(3,1fr)}
+.slide.mv{--bg:var(--dk);--mut:#fff;--d0:.3s;padding:0;display:grid;grid-template-columns:repeat(3,1fr)}
 .pn{position:relative;overflow:hidden;padding:0 56px;display:flex;flex-direction:column}
-.p1{background:#008938}.p2{background:var(--y);color:var(--k)}.p3{background:#024810}
+.p1{background:linear-gradient(rgba(70,160,88,.4),rgba(70,160,88,.4)),url(img/paper-green.jpg) left center/1920px 1080px}.p2{background:#E8B62A;color:var(--k)}.p3{background:url(img/paper-green.jpg) right center/1920px 1080px}
+.p2::after{content:"";position:absolute;inset:0;pointer-events:none;background:url(img/paper-tex.jpg) center/1920px 1080px;mix-blend-mode:overlay}
 .pic{position:relative;height:330px;margin-top:150px}
 .pic img{position:absolute;left:50%;width:620px;margin-left:-310px;transform:rotate(-7deg)}
 .p1 .pic img:first-child{top:56px}.p1 .pic img:last-child{top:160px;transform:rotate(4deg)}
@@ -424,6 +425,11 @@ body.print .ly img{transform:none!important}body.print .lb,body.print .key{opaci
 #crv.on{opacity:1;transition:opacity .08s}
 .slide.noanim,.slide.noanim *{animation:none!important}
 body.print #crv{display:none}
+
+/* ---------- every slide is printed on the paper from the crumple video ---------- */
+.slide.dark:not(.cover):not(.close):not(.brk):not(.mv){background:var(--bg) url(img/paper-green.jpg) center/cover}
+.slide:not(.dark)::after,.slide.brk::after{content:"";position:absolute;inset:0;z-index:40;pointer-events:none;background:url(img/paper-tex.jpg) center/cover;mix-blend-mode:overlay;opacity:.75}
+body.print .slide::after{display:none}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition-duration:.01s!important}}
 
