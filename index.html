@@ -409,6 +409,21 @@ body.print .ly img{transform:none!important}body.print .lb,body.print .key{opaci
 .mv .answer{position:absolute;left:96px;bottom:88px;width:1400px;padding:34px 120px 36px 40px}
 .mv .answer p{font-size:38px;line-height:1.1;font-weight:800;letter-spacing:-.01em}
 
+/* ---------- slide 2 to 3: the slide crumples into a paper ball, the ball opens into the next slide ---------- */
+#stage.crumpling{background:#024810}
+@keyframes crout{0%{clip-path:polygon(0 0,25% 0,50% 0,75% 0,100% 0,100% 25%,100% 50%,100% 75%,100% 100%,75% 100%,50% 100%,25% 100%,0 100%,0 75%,0 50%,0 25%);transform:none}45%{clip-path:polygon(6% 8%,27% 3%,50% 9%,72% 2%,95% 10%,91% 28%,97% 50%,90% 73%,94% 93%,73% 97%,50% 90%,26% 98%,5% 91%,10% 72%,3% 50%,9% 27%);transform:scale(.82) rotate(-5deg)}100%{clip-path:polygon(34% 30%,42% 24%,50% 29%,59% 22%,68% 31%,74% 40%,69% 50%,76% 61%,67% 71%,58% 77%,50% 70%,41% 78%,32% 69%,25% 60%,31% 50%,26% 39%);transform:scale(.42) rotate(24deg);filter:brightness(.75)}}
+@keyframes crin{0%{clip-path:polygon(34% 30%,42% 24%,50% 29%,59% 22%,68% 31%,74% 40%,69% 50%,76% 61%,67% 71%,58% 77%,50% 70%,41% 78%,32% 69%,25% 60%,31% 50%,26% 39%);transform:scale(.42) rotate(-20deg);filter:brightness(.8)}55%{clip-path:polygon(6% 8%,27% 3%,50% 9%,72% 2%,95% 10%,91% 28%,97% 50%,90% 73%,94% 93%,73% 97%,50% 90%,26% 98%,5% 91%,10% 72%,3% 50%,9% 27%);transform:scale(.84) rotate(4deg)}100%{clip-path:polygon(0 0,25% 0,50% 0,75% 0,100% 0,100% 25%,100% 50%,100% 75%,100% 100%,75% 100%,50% 100%,25% 100%,0 100%,0 75%,0 50%,0 25%);transform:none}}
+@keyframes crease{to{opacity:.55}}
+.slide.cr-out{opacity:1;visibility:visible;z-index:2;animation:crout .8s cubic-bezier(.5,0,.9,.5) both}
+.slide.cr-out::after{content:"";position:absolute;inset:0;z-index:60;opacity:0;animation:crease .8s ease-in both;background:linear-gradient(118deg,transparent 0 12%,rgba(0,0,0,.35) 12% 13%,rgba(255,255,255,.25) 13% 27%,rgba(0,0,0,.3) 27% 28%,transparent 28% 44%,rgba(255,255,255,.22) 44% 58%,rgba(0,0,0,.35) 58% 59%,transparent 59% 76%,rgba(0,0,0,.25) 76% 90%,transparent 90%),linear-gradient(28deg,transparent 0 22%,rgba(0,0,0,.28) 22% 38%,transparent 38% 61%,rgba(255,255,255,.2) 61% 80%,transparent 80%)}
+.slide.cr-gone{opacity:0!important;visibility:hidden!important}
+.slide.cr-in{z-index:3;animation:crin .95s cubic-bezier(.15,.7,.2,1) 1.15s both}
+.slide.cr-in.mv .row{animation-delay:calc(1.75s + var(--n)*.25s)}
+#ball{position:absolute;left:50%;top:50%;width:520px;margin:-260px 0 0 -260px;z-index:5;opacity:0;pointer-events:none}
+@keyframes ball{0%{opacity:0;transform:scale(.8) rotate(-30deg)}32%{opacity:1;transform:scale(1) rotate(0)}50%{transform:scale(.93) rotate(14deg)}68%{opacity:1;transform:scale(1.04) rotate(26deg)}100%{opacity:0;transform:scale(1.5) rotate(40deg)}}
+#ball.go{animation:ball 1.05s ease-in-out .55s both}
+body.print #ball{display:none}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition-duration:.01s!important}}
 
 /* notes */
@@ -737,6 +752,7 @@ body.print .paper,body.print #edge,body.print #hint,body.print #nv{display:none}
 </section>
 
 <div id="edge"></div>
+<img id="ball" src="img/paper-ball.png" alt="">
 </div>
 <div id="nv"></div>
 <div id="hint">N: notes</div>
@@ -792,7 +808,19 @@ slides.forEach((s,i)=>{
 function show(i,k){
   const was=cur; cur=Math.max(0,Math.min(slides.length-1,i));
   step=Math.max(0,Math.min(+slides[cur].dataset.steps||0,k||0));
+  const MV=slides.findIndex(x=>x.classList.contains('mv'));
+  if(was==MV-1&&cur==MV&&!PRINT){
+    // crumple: old slide balls up, the paper ball spins, then opens into the new slide
+    const ball=document.getElementById('ball'), a=slides[was], b=slides[cur], C=['enter','leave','rev','cr-out','cr-in','cr-gone'];
+    slides.forEach(x=>x.classList.remove(...C)); clearTimeout(swT);
+    stage.classList.add('crumpling'); a.classList.add('cr-out'); b.classList.add('cr-in');
+    ball.className='';ball.offsetWidth;ball.className='go';
+    setTimeout(()=>a.classList.add('cr-gone'),820);
+    swT=setTimeout(()=>{slides.forEach(x=>x.classList.remove(...C));stage.classList.remove('crumpling');ball.className=''},2250);
+    return paint();
+  }
   if(was>=0&&was!=cur&&!PRINT){
+    stage.classList.remove('crumpling');slides.forEach(x=>x.classList.remove('cr-out','cr-in','cr-gone'));
     // old slide stays underneath while the new one wipes in over it
     const off=()=>slides.forEach(x=>x.classList.remove('enter','leave','rev')), rev=cur<was;
     off(); slides[was].classList.add('leave'); slides[cur].classList.add('enter');
