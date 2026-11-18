@@ -488,17 +488,6 @@ body.print .paper,body.print #edge,body.print #hint,body.print #nv{display:none}
   <aside class="notes"><p>Before the analysis, what Subway says it stands for, in its own words.</p><p>Mission: to provide a variety of great tasting, nutritious food choices while reducing its environmental footprint and creating a positive influence in the communities it serves.</p><p>Vision: to make its restaurants and operations as environmentally and socially responsible as possible.</p><p>Values, what it commits to: nutritious options, the highest food quality and safety standards, sustainable and cost-effective solutions for franchisees, sustainability in energy, water, waste and sourcing, and franchisees that contribute to their communities.</p><p>Click. Conclusion: sustainability is the promise, but the restaurants are run by independent franchisees, so they are the ones who have to deliver it. That is the thread of our analysis.</p></aside>
 </section>
 
-<section class="slide dark build" data-steps="1" data-title="The build">
-  <h2>Seven layers of analysis, one recommendation</h2>
-  <p class="lead">We build the strategy the way Subway builds a sub: from the base up.</p>
-  <ul class="key"><li class="l1"><i></i>Outside in</li><li class="l2"><i></i>Inside out</li><li class="l3"><i></i>The way forward</li></ul>
-  <div data-stack></div>
-  <img class="whole" src="img/sub-whole.png" alt="">
-  <div class="answer" data-at="1"><small>Recommendation</small><p>Refocus on cost leadership</p></div>
-  <div class="src">Click a layer to jump to that slide.</div>
-  <aside class="notes"><p>We build our strategy the way Subway builds a sub, from the base up. Outside in: PESTEL, Porter's Five Forces and the Strategy Canvas. Inside out: VRIO and the Value Chain. The way forward: stakeholders and Porter's generic strategies.</p><p>Click. Stacked together, the seven layers give one recommendation: cost leadership.</p></aside>
-</section>
-
 <!-- 4 PESTEL -->
 <section class="slide dark brk" data-title="Outside in" style="--img:url(img/part-1.jpg)">
   <div class="photo"></div>
@@ -771,12 +760,6 @@ let cur=-1, step=0, swT, t0=Date.now();
 // three rows of arrows pointing at the recommendation
 const order=()=>'<div class="order">'+PT.map((r,l)=>`<div class="ocol l${l+1} in"><span class="num">PART 0${l+1}</span><h3>${r[0]}</h3><p>${r[1]}</p>`+ST.map((x,j)=>x[2]==l+1?`<button class="ar" data-go="${IDX(j)}"><b>${x[0]}</b><span>${x[1]}</span><i></i></button>`:'').join('')+'</div>').join('')+`<button class="dest in" data-go="${IDX(7)}"><small>Our recommendation</small><b>Refocus on cost leadership</b><i></i></button></div>`;
 $$('[data-order]').forEach(e=>e.innerHTML=order());
-// the build: top layer = last analysis; --cy is how far each layer travels when the sandwich closes
-$$('[data-stack]').forEach(e=>{const H=[230,175,114,139,132,159,219].map(h=>h*520/880), G=20, et=[], ct=[]; let y=0;
-  H.forEach((h,i)=>{et[i]=y;y+=h+G}); ct[6]=et[6];
-  for(let i=5;i>=0;i--)ct[i]=ct[i+1]-H[i]+Math.min(H[i],H[i+1])*(i?.45:.66);
-  const mid=(ct[0]+ct[6]+H[6])/2, shift=(y-G)/2-mid;
-  e.outerHTML='<div class="stack">'+H.map((h,i)=>{const j=6-i,x=ST[j];return `<button class="ly l${x[2]}" data-go="${IDX(j)}" style="--n:${j};z-index:${9-i}"><span class="lb"><em>${x[1]}</em><b>${x[0]}</b></span><img src="img/layer-${i+1}.png" alt="" style="--cy:${(ct[i]+shift-et[i]).toFixed(0)}px"></button>`}).join('')+'</div>'});
 
 // strategy canvas lines
 $$('.chart g[data-v]').forEach(g=>{const v=g.dataset.v.split(',').map((n,i)=>[160+i*190,385-n*65]);
